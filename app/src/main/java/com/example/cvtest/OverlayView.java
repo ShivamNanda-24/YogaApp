@@ -56,15 +56,10 @@ public class OverlayView extends View {
                 // Drawing points
                 for (int i = 0; i < landmarkList.size(); i++) {
                     NormalizedLandmark landmark = landmarkList.get(i);
-                    if (i == 12 || i == 14 || i == 16) {
-                        Log.d(String.valueOf(i), landmark.toString());
-                    }
-                    else {
-                        canvas.drawPoint(
-                                landmark.x() * imageWidth * scaleFactor,
-                                landmark.y() * imageHeight * scaleFactor,
-                                pointPaint);
-                    }
+                    canvas.drawPoint(
+                            landmark.x() * imageWidth * scaleFactor,
+                            landmark.y() * imageHeight * scaleFactor,
+                            pointPaint);
                 }
 
                 // Drawing lines
