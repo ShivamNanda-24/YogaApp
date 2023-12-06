@@ -22,9 +22,36 @@
     android:background="@android:color/transparent">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+      android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="16dp">
+
+  <TextView
+      android:id="@+id/welcomeText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Welcome to AI Yoga Coach"
+      android:textSize="24sp"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="20dp"/>
+
+  <ImageView
+      android:id="@+id/yogaImage"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/yoga_image"
+      android:layout_below="@id/welcomeText"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="20dp"/>
+
+  <Button
+      android:id="@+id/startButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Start Your Session"
+      android:layout_below="@id/yogaImage"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="20dp"/>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container"

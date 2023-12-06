@@ -20,6 +20,17 @@ public class MainActivity extends AppCompatActivity {
 
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
+
+        startButton = findViewById(R.id.startButton);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start the yoga session or navigate to another activity
+                // Intent intent = new Intent(MainActivity.this, YogaSessionActivity.class);
+                // startActivity(intent);
+            }
+        });
     }
 
     @Override
