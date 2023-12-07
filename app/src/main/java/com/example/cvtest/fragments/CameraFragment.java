@@ -28,6 +28,7 @@ import com.example.cvtest.MainViewModel;
 import com.example.cvtest.PoseLandmarkerHelper;
 import com.example.cvtest.R;
 import com.example.cvtest.databinding.FragmentCameraBinding;
+
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
 import java.util.Locale;

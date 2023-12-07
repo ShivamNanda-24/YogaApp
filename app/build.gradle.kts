@@ -37,7 +37,7 @@ android {
 dependencies {
     implementation("androidx.fragment:fragment:1.2.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("com.google.mediapipe:tasks-vision:0.10.0")
+    implementation("com.google.mediapipe:tasks-vision:0.10.8")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
