@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,13 +24,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.cvtest.MainViewModel;
-import com.example.cvtest.PoseLandmarkerHelper;
+import com.example.cvtest.helpers.PoseLandmarkerHelper;
 import com.example.cvtest.R;
 import com.example.cvtest.databinding.FragmentCameraBinding;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mediapipe.tasks.vision.core.RunningMode;
-import java.util.Locale;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CameraFragment extends Fragment implements PoseLandmarkerHelper.LandmarkerListener {
     private static final String TAG = "Pose Landmarker";
-    private FragmentCameraBinding fragmentCameraBinding;
+    private static FragmentCameraBinding fragmentCameraBinding;
     private PoseLandmarkerHelper poseLandmarkerHelper;
     private MainViewModel viewModel;
     private Preview preview;
@@ -122,27 +121,6 @@ public class CameraFragment extends Fragment implements PoseLandmarkerHelper.Lan
                 );
             }
         });
-    }
-
-    private void updateControlsUi() {
-        if (poseLandmarkerHelper != null) {
-            fragmentCameraBinding.bottomSheetLayout.detectionThresholdValue.setText(
-                    String.format(Locale.US, "%.2f", poseLandmarkerHelper.minPoseDetectionConfidence)
-            );
-            fragmentCameraBinding.bottomSheetLayout.trackingThresholdValue.setText(
-                    String.format(Locale.US, "%.2f", poseLandmarkerHelper.minPoseDetectionConfidence)
-            );
-            fragmentCameraBinding.bottomSheetLayout.presenceThresholdValue.setText(
-                    String.format(Locale.US, "%.2f", poseLandmarkerHelper.minPoseDetectionConfidence)
-            );
-
-            backgroundExecutor.execute(() -> {
-                poseLandmarkerHelper.clearPoseLandmarker();
-                poseLandmarkerHelper.setupPoseLandmarker();
-            });
-
-            fragmentCameraBinding.overlay.clear();
-        }
     }
 
 
@@ -232,9 +210,6 @@ public class CameraFragment extends Fragment implements PoseLandmarkerHelper.Lan
     public void onResults(PoseLandmarkerHelper.ResultBundle resultBundle) {
         getActivity().runOnUiThread(() -> {
             if (fragmentCameraBinding != null) {
-                fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.setText(
-                        String.format(Locale.US, "%d ms", resultBundle.getInferenceTime())
-                );
 
                 fragmentCameraBinding.overlay.setResults(
                         resultBundle.getResult(),
@@ -253,9 +228,6 @@ public class CameraFragment extends Fragment implements PoseLandmarkerHelper.Lan
         getActivity().runOnUiThread(() -> {
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             if (errorCode == PoseLandmarkerHelper.GPU_ERROR) {
-                fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.setSelection(
-                        PoseLandmarkerHelper.DELEGATE_CPU, false
-                );
             }
         });
     }

@@ -11,6 +11,7 @@ public class CustomTimer {
 
     public interface TimerListener {
         void onTick(long millisUntilFinished);
+        void onFinish(); // New method to notify when the timer finishes
     }
 
     public CustomTimer(long millisInFuture, long countDownInterval, TimerListener listener) {
@@ -24,6 +25,9 @@ public class CustomTimer {
             public void run() {
                 if (millisUntilFinished <= 0) {
                     isRunning = false;
+                    if (listener != null) {
+                        listener.onFinish(); // Notify that the timer has finished
+                    }
                     return;
                 }
 
@@ -54,7 +58,6 @@ public class CustomTimer {
     public void reset(long millisInFuture) {
         pause();
         runnable = new Runnable() {
-            long millisUntilFinished = millisInFuture;
 
             @Override
             public void run() {

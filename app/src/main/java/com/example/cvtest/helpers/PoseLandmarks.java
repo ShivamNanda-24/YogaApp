@@ -93,6 +93,4 @@ public class PoseLandmarks {
     private NormalizedLandmark getLandmark(List<NormalizedLandmark> landmarks, int index) {
         return index < landmarks.size() ? landmarks.get(index) : null;
     }
-
-    // Additional methods for any other specific landmark processing can be added here
 }

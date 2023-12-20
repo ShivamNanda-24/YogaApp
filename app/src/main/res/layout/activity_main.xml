@@ -16,7 +16,6 @@
             android:id="@+id/textView"
             android:layout_width="280dp"
             android:layout_height="150dp"
-            android:text="TextView"
             android:textSize="40dp"
             android:textColor="@color/mp_color_error"
             android:textFontWeight="1000"
@@ -26,17 +25,38 @@
             />
 
         <!-- textViewTimer to the right of TextView with the height reduced to 75dp -->
-        <TextView
-            android:id="@+id/textViewTimer"
+        <FrameLayout
+            android:id="@+id/textViewTimerView"
             android:layout_width="280dp"
             android:layout_height="75dp"
-            android:textSize="30dp"
-            android:textColor="@color/design_default_color_primary_dark"
-            android:text="30"
-            android:gravity="center|bottom"
-            android:background="@drawable/textview_border"
             android:layout_toRightOf="@id/textView"
-            android:layout_alignTop="@id/textView" />
+            android:layout_alignTop="@id/textView">
+
+            <TextView
+                android:id="@+id/textViewTimer"
+                android:layout_width="57dp"
+                android:layout_height="58dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circle_background"
+                android:gravity="center"
+                android:text="15"
+                android:textColor="@color/design_default_color_primary_dark"
+                android:textSize="30dp" />
+
+        </FrameLayout>
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/textViewTimer2"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:textSize="30dp"-->
+<!--            android:textColor="@color/design_default_color_primary_dark"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@drawable/circle_background"-->
+<!--            android:layout_centerInParent="true" />-->
+
+
 
         <!-- textViewTimerText below textViewTimer with half the original height of textViewTimer (75dp) -->
         <TextView
@@ -45,11 +65,9 @@
             android:layout_height="75dp"
             android:textSize="30dp"
             android:textColor="@color/design_default_color_primary_dark"
-            android:text="Timer Text"
             android:gravity="center|top"
-            android:background="@drawable/textview_border"
             android:layout_toRightOf="@id/textView"
-            android:layout_below="@id/textViewTimer" />
+            android:layout_below="@id/textViewTimerView" />
 
         <!-- FragmentContainerView below the TextViews -->
         <androidx.fragment.app.FragmentContainerView
@@ -67,12 +85,12 @@
         <!-- ImageView remains unchanged -->
         <ImageView
             android:id="@+id/myImageView"
-            android:layout_width="150dp"
-            android:layout_height="250dp"
+            android:layout_width="180dp"
+            android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="45dp"
-            android:background="@drawable/image" />
+            />
 
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:scaleType="fillStart" />
 
-    <com.example.cvtest.OverlayView
+    <com.example.cvtest.Views.OverlayView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

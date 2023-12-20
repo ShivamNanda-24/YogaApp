@@ -1,37 +1,29 @@
 package com.example.cvtest.features;
 
-import static android.opengl.ETC1.getHeight;
-import static android.opengl.ETC1.getWidth;
-
-import android.graphics.Canvas;
-import android.util.Log;
-
-import com.example.cvtest.OverlayView;
 import com.example.cvtest.helpers.PoseLandmarks;
+import com.example.cvtest.helpers.TreePoseHelper;
+import com.example.cvtest.helpers.WarriorPoseHelper;
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark;
-import com.google.mediapipe.tasks.vision.core.RunningMode;
-import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PoseEstimation {
-    String pose;
     private float scaleFactor = 1f;
     private int imageWidth = 1;
     private int imageHeight = 1;
-    private static PoseLandmarkerResult results;
     private static List<NormalizedLandmark> leftArmLandmarks;
     private static List<NormalizedLandmark> rightArmLandmarks;
     private static List<NormalizedLandmark> rightLegLandmarks;
     private static List<NormalizedLandmark> leftHandLandmarks;
+    private static List<NormalizedLandmark> leftLegLandmarks;
     private static List<NormalizedLandmark> rightHandLandmarks;
     private static NormalizedLandmark leftKneePoints;
-    static float angleDegrees ;
+    static float angleDegrees;
     static boolean wristsAboveNose;
+    private static float distanceLeftRightFeet;
 
     // get the button pressed and based on that setPose
 
@@ -47,51 +39,93 @@ public class PoseEstimation {
                 poseLandmarks.leftIndex != null && poseLandmarks.leftThumb != null &&
                 poseLandmarks.rightPinky != null && poseLandmarks.rightIndex != null &&
                 poseLandmarks.rightThumb != null && poseLandmarks.leftKnee != null &&
-                poseLandmarks.rightHeel != null && poseLandmarks.leftHeel != null) {
+                poseLandmarks.rightHeel != null && poseLandmarks.leftHeel != null &&
+                poseLandmarks.leftHip != null) {
 
             leftArmLandmarks = Arrays.asList(poseLandmarks.leftShoulder, poseLandmarks.leftElbow, poseLandmarks.leftWrist);
             rightArmLandmarks = Arrays.asList(poseLandmarks.rightShoulder, poseLandmarks.rightElbow, poseLandmarks.rightWrist);
             rightLegLandmarks = Arrays.asList(poseLandmarks.rightHip, poseLandmarks.rightKnee, poseLandmarks.rightHeel);
+            leftLegLandmarks = Arrays.asList(poseLandmarks.leftHip, poseLandmarks.leftKnee, poseLandmarks.leftHeel);
             leftHandLandmarks = Arrays.asList(poseLandmarks.leftPinky, poseLandmarks.leftIndex, poseLandmarks.leftThumb);
             rightHandLandmarks = Arrays.asList(poseLandmarks.rightPinky, poseLandmarks.rightIndex, poseLandmarks.rightThumb);
-            leftKneePoints  = poseLandmarks.leftKnee;
+            leftKneePoints = poseLandmarks.leftKnee;
+            if (pose.equals("Tree Pose")) {
 
-            // Adding each landmark list to the resultMap with descriptive keys
-            poseLineMap.put("leftArmLandmarks", leftArmLandmarks);
-            poseLineMap.put("rightArmLandmarks", rightArmLandmarks);
-            poseLineMap.put("rightLegLandmarks", rightLegLandmarks);
-            poseLineMap.put("leftHandLandmarks", leftHandLandmarks);
-            poseLineMap.put("rightHandLandmarks", rightHandLandmarks);
-            poseLineMap.put("leftKneePoints", leftKneePoints);
+                // Adding each landmark list to the resultMap with descriptive keys
+                poseLineMap.put("leftArmLandmarks", leftArmLandmarks);
+                poseLineMap.put("rightArmLandmarks", rightArmLandmarks);
+                poseLineMap.put("rightLegLandmarks", rightLegLandmarks);
+                poseLineMap.put("leftHandLandmarks", leftHandLandmarks);
+                poseLineMap.put("rightHandLandmarks", rightHandLandmarks);
+                poseLineMap.put("leftKneePoints", leftKneePoints);
+            } else if (pose.equals("Warrior Pose") || pose.equals("Routine")) {
+
+                // Adding each landmark list to the resultMap with descriptive keys
+                poseLineMap.put("leftArmLandmarks", leftArmLandmarks);
+                poseLineMap.put("rightArmLandmarks", rightArmLandmarks);
+                poseLineMap.put("rightLegLandmarks", rightLegLandmarks);
+                poseLineMap.put("leftLegLandmarks", leftLegLandmarks);
+            }
 
         }
         return poseLineMap;
     }
 
-    public static Map<String, Object> computeYogaPose(PoseLandmarks poseLandmarks) {
-            Map<String, Object> yogaPoseCalculations = new HashMap<>();
+    public static Map<String, Object> yogaPoseCalculations(String pose, PoseLandmarks poseLandmarks) {
+        Map<String, Object> angles = new HashMap<>();
 
-            float distPalms = calculateDistance(poseLandmarks.rightWrist, poseLandmarks.leftWrist);
-            float distLeftKneeAndRightFoot = calculateDistance(poseLandmarks.leftKnee, poseLandmarks.rightHeel);
-            float angleRightArm = calculateAngle(rightArmLandmarks);
-            float angleLeftArm = calculateAngle(leftArmLandmarks);
-            float angleRightLeg = calculateAngle(rightLegLandmarks);
+        float angleRightLeg = calculateAngle(rightLegLandmarks);
+        float angleLeftLeg = calculateAngle(leftLegLandmarks);
+        float distanceBetweenLegs = distanceLeftRightFeet;
 
-            if (poseLandmarks.rightWrist != null && poseLandmarks.leftWrist != null  && poseLandmarks.nose  != null) {
+        angles.put("angleRightLeg", angleRightLeg);
+        angles.put("distanceBetweenLegs", distanceBetweenLegs);
+        angles.put("angleLeftLeg", angleLeftLeg);
+
+        return angles;
+    }
+
+    public static Map<String, Object> computeYogaPose(String pose, PoseLandmarks poseLandmarks) {
+        Map<String, Object> yogaPoseCalculations = new HashMap<>();
+        float distPalms = calculateDistance(poseLandmarks.rightWrist, poseLandmarks.leftWrist);
+        float distLeftKneeAndRightFoot = calculateDistance(poseLandmarks.leftKnee, poseLandmarks.rightHeel);
+        distanceLeftRightFeet = calculateDistance(poseLandmarks.leftHeel, poseLandmarks.rightHeel);
+
+        float angleRightArm = calculateAngle(rightArmLandmarks);
+        float angleLeftArm = calculateAngle(leftArmLandmarks);
+        float angleRightLeg = calculateAngle(rightLegLandmarks);
+        float angleLeftLeg = calculateAngle(leftLegLandmarks);
+
+
+        if (pose.equals("Tree Pose")) {
+            if (poseLandmarks.rightWrist != null && poseLandmarks.leftWrist != null && poseLandmarks.nose != null) {
                 wristsAboveNose = poseLandmarks.rightWrist.y() < poseLandmarks.nose.y() && poseLandmarks.leftWrist.y() < poseLandmarks.nose.y();
             }
-            boolean armsPosition = checkArmsPosition(distPalms);
-            boolean armsStretched = checkArmsStretched( angleRightArm,angleLeftArm,wristsAboveNose);
-            boolean rightLegAngle = checkRightLegAngle(angleRightLeg);
-            boolean kneeFootDistance = checkKneeFootDistance( distLeftKneeAndRightFoot);
+            boolean armsPosition = TreePoseHelper.checkArmsPosition(distPalms);
+            boolean armsStretched = TreePoseHelper.checkArmsStretched(angleRightArm, angleLeftArm, wristsAboveNose);
+            boolean rightLegAngle = TreePoseHelper.checkRightLegAngle(angleRightLeg);
+            boolean kneeFootDistance = TreePoseHelper.checkKneeFootDistance(distLeftKneeAndRightFoot);
 
             yogaPoseCalculations.put("wristsAboveNose", wristsAboveNose);
             yogaPoseCalculations.put("armsPosition", armsPosition);
             yogaPoseCalculations.put("armsStretched", armsStretched);
             yogaPoseCalculations.put("rightLegAngle", rightLegAngle);
             yogaPoseCalculations.put("kneeFootDistance", kneeFootDistance);
+        } else if (pose.equals("Warrior Pose") || pose.equals("Routine")) {
 
-            return  yogaPoseCalculations;
+            boolean rightArmStretched = WarriorPoseHelper.checkArmsStretchedOut(angleRightArm);
+            boolean leftArmStretched = WarriorPoseHelper.checkArmsStretchedOut(angleLeftArm);
+            boolean feetDistance = WarriorPoseHelper.checkDistance(distanceLeftRightFeet, 0.3);
+            boolean leftLegAngle = WarriorPoseHelper.checkLeftLegAngle(angleLeftLeg, 15F);
+            boolean rightLegAngle = WarriorPoseHelper.checkRightLegAngle(angleRightLeg, 70F);
+
+            yogaPoseCalculations.put("rightArmStretched", rightArmStretched);
+            yogaPoseCalculations.put("leftArmStretched", leftArmStretched);
+            yogaPoseCalculations.put("feetDistance", feetDistance);
+            yogaPoseCalculations.put("leftLegAngle", leftLegAngle);
+            yogaPoseCalculations.put("rightLegAngle", rightLegAngle);
+        }
+        return yogaPoseCalculations;
     }
 
     public static float calculateDistance(NormalizedLandmark point1, NormalizedLandmark point2) {
@@ -111,7 +145,6 @@ public class PoseEstimation {
             if (landmarks.size() != 3) {
                 throw new IllegalArgumentException("Landmarks array must contain exactly 3 elements.");
             }
-
             // Extract landmarks
             NormalizedLandmark first = landmarks.get(0);
             NormalizedLandmark middle = landmarks.get(1);
@@ -134,40 +167,6 @@ public class PoseEstimation {
         }
         return angleDegrees;
     }
-
-    private static boolean checkArmsPosition(Float distPalms) {
-        if (distPalms < 0.1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean checkArmsStretched(Float angleRightArm, Float angleLeftArm, Boolean wristsAboveNose) {
-        if (angleRightArm < 90 && angleLeftArm < 90 && wristsAboveNose) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean checkKneeFootDistance(Float distLeftKneeAndRightFoot) {
-        if (distLeftKneeAndRightFoot < 0.1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean checkRightLegAngle(Float angleRightLeg) {
-        if (angleRightLeg > 130) {
-            return true;
-        } else {
-
-            return false;
-        }
-    }
 }
-
 
 

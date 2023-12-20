@@ -2,6 +2,8 @@ package com.example.cvtest;
 
 import androidx.lifecycle.ViewModel;
 
+import com.example.cvtest.helpers.PoseLandmarkerHelper;
+
 /**
  * This ViewModel is used to store pose landmarker helper settings.
  */

@@ -1,20 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:background="#fffbf4">
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button 1" />
+    <!-- White overlay with rounded top corners and upper margin -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:background="@drawable/rounded_overlay"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button 2" />
-</LinearLayout>
+        <!-- Yellow square -->
+        <FrameLayout
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
+
+            <!-- Yellow square -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/yellow_square_rounded"/>
+
+            <!-- Image in the middle of the yellow square -->
+            <ImageView
+                android:id="@+id/image_in_yellow_square"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/folding_hand_pose" /> <!-- Replace with your image resource -->
+        </FrameLayout>
+
+        <!-- Toggle buttons for Yoga and Meditation -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ToggleButton
+                android:id="@+id/yogaButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.45"
+                android:textOn="Positions"
+                android:textOff="Positions"
+                android:checked="true"
+                android:textColor="@color/toggle_button_text_color"
+                android:background="@drawable/rounded_button_selector" />
+
+            <ToggleButton
+                android:id="@+id/meditationButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.45"
+                android:textOn="Routine"
+                android:textOff="Routine"
+                android:textColor="@color/toggle_button_text_color"
+                android:background="@drawable/rounded_button_selector" />
+
+        </LinearLayout>
+        <!-- Vertical list of poses inside a ScrollView -->
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tree Pose"
+                    android:textSize="18sp"
+                    android:drawableRight="@drawable/tree_pose_button"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#d5d7fe"/>
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Warrior Pose"
+                    android:textSize="18sp"
+                    android:drawableLeft="@drawable/warrior_pose_button"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#e4efea"/>
+
+            </LinearLayout>
+        </ScrollView>
+        <FrameLayout
+            android:id="@+id/meditationPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="visible"> <!-- Change visibility to visible -->
+
+            <!-- Button under the meditation section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp">
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="30 second Routine"
+                    android:textSize="18sp"
+                    android:drawableRight="@drawable/routine"
+                    android:backgroundTint="#ffccb5"/>
+            </LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+</RelativeLayout>
